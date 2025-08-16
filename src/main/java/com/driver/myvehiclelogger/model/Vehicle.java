@@ -3,6 +3,8 @@ package com.driver.myvehiclelogger.model;
 import com.driver.myvehiclelogger.model.enums.Category;
 import com.driver.myvehiclelogger.model.enums.Color;
 import com.driver.myvehiclelogger.model.enums.Engine;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,7 +53,8 @@ public class Vehicle {
     @Column
     private String image;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JsonBackReference
     private User owner;
 
     @Column(nullable = false)

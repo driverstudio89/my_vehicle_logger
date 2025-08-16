@@ -1,5 +1,6 @@
 package com.driver.myvehiclelogger.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,8 @@ public class User {
     @Column(columnDefinition = "VARCHAR(50)")
     private String lastName;
 
-    @OneToMany(targetEntity = Vehicle.class)
+    @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<Vehicle> vehicles;
 
 }
