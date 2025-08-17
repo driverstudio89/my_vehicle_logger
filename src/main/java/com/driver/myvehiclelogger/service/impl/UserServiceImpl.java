@@ -3,6 +3,7 @@ package com.driver.myvehiclelogger.service.impl;
 import com.driver.myvehiclelogger.data.UserRepository;
 import com.driver.myvehiclelogger.mapper.UserMapper;
 import com.driver.myvehiclelogger.model.User;
+import com.driver.myvehiclelogger.model.enums.Role;
 import com.driver.myvehiclelogger.service.UserService;
 import com.driver.myvehiclelogger.web.dto.RegisterUserRequest;
 import com.driver.myvehiclelogger.web.dto.UserDto;
@@ -25,15 +26,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserById(id).orElse(null);
     }
 
-
-
     @Override
     public UserDto register(RegisterUserRequest request) {
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
-        UserDto userDto = userMapper.toDto(user);
-        return userDto;
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -47,4 +46,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElse(null);
+    }
 }

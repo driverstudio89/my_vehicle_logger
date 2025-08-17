@@ -1,5 +1,6 @@
 package com.driver.myvehiclelogger.model;
 
+import com.driver.myvehiclelogger.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,6 +35,10 @@ public class User {
 
     @Column(columnDefinition = "VARCHAR(50)")
     private String lastName;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
