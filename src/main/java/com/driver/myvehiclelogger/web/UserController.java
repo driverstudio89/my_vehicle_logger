@@ -36,9 +36,10 @@ public class UserController {
     public ResponseEntity<?> userRegister(
             @Valid @RequestBody RegisterUserRequest request,
             UriComponentsBuilder uriBuilder) {
-        if (userService.existsByEmail(request.getEmail())) {
+        Map<String, String> alreadyRegistered = userService.isAlreadyRegistered(request);
+        if (alreadyRegistered != null) {
             return ResponseEntity.badRequest().body(
-                    Map.of("email", "Email is already registered")
+                    alreadyRegistered
             );
         }
 

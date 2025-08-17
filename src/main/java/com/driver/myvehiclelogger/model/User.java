@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.action.internal.OrphanRemovalAction;
 
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class User {
     @Column(columnDefinition = "VARCHAR(50)")
     private String lastName;
 
-    @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     private Set<Vehicle> vehicles;
 

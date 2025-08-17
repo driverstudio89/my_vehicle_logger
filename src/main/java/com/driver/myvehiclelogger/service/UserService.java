@@ -5,13 +5,16 @@ import com.driver.myvehiclelogger.web.dto.RegisterUserRequest;
 import com.driver.myvehiclelogger.web.dto.UserDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.Map;
 
 public interface UserService {
 
 
     User findUserById(Long id);
 
-    boolean existsByEmail(String email);
+    UserDto register(RegisterUserRequest request);
 
-    UserDto register(@Valid RegisterUserRequest request);
+    Map<String, String> isAlreadyRegistered(RegisterUserRequest request);
 }

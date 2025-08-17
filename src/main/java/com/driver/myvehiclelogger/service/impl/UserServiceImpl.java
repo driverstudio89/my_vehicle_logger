@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -23,10 +25,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserById(id).orElse(null);
     }
 
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
+
 
     @Override
     public UserDto register(RegisterUserRequest request) {
@@ -36,4 +35,16 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = userMapper.toDto(user);
         return userDto;
     }
+
+    @Override
+    public Map<String, String> isAlreadyRegistered(RegisterUserRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return Map.of("email", "Email is already registered");
+        }
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            return Map.of("phoneNumber", "Phone number is already registered");
+        }
+        return null;
+    }
+
 }
