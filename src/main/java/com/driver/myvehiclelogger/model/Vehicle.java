@@ -30,7 +30,10 @@ public class Vehicle {
     private String model;
 
     @Column(nullable = false)
-    private String year;
+    private Integer year;
+
+    @Column(nullable = false)
+    private String registration;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -62,5 +65,9 @@ public class Vehicle {
 
     @Column(nullable = false)
     private LocalDate updated;
+
+    public Long getOwnerId() {
+        return owner.getId();
+    }
 
 }
