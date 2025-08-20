@@ -45,4 +45,13 @@ public class VehicleController {
         }
         return ResponseEntity.ok(vehicles);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleDto> getVehicleById(@PathVariable Long id) {
+        VehicleDto vehicleDto = vehicleService.findVehicleById(id);
+        if (vehicleDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(vehicleDto);
+    }
 }

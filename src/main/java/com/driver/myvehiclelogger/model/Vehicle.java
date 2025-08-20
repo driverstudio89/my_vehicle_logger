@@ -4,7 +4,6 @@ import com.driver.myvehiclelogger.model.enums.Category;
 import com.driver.myvehiclelogger.model.enums.Color;
 import com.driver.myvehiclelogger.model.enums.Engine;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,9 +55,12 @@ public class Vehicle {
     @Column
     private String image;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_vehicles",
+        joinColumns = @JoinColumn(name = "vehicles_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @JsonBackReference
-    private User owner;
+    private User user;
 
     @Column(nullable = false)
     private LocalDate created;
@@ -67,7 +69,7 @@ public class Vehicle {
     private LocalDate updated;
 
     public Long getOwnerId() {
-        return owner.getId();
+        return user.getId();
     }
 
 }

@@ -11,4 +11,6 @@ public interface VehicleService {
     VehicleDto addVehicle(AddVehicleDto addVehicleDto);
 
     List<VehicleDto> findAllVehicleByUser();
+
+    VehicleDto findVehicleById(Long id);
 }

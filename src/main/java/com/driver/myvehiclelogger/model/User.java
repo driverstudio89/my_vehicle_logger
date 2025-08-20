@@ -40,7 +40,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(targetEntity = User.class, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
     private Set<Vehicle> vehicles;
 
