@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface VehicleMapper {
 
 
-//    @Mapping(target = "owner", expression = "java(vehicle.getOwnerId())")
+    @Mapping(target = "ownerId", expression = "java(vehicle.getOwnerId())")
     VehicleDto toVehicleDto(Vehicle vehicle);
 
     Vehicle toEntity(AddVehicleDto addVehicleDto);

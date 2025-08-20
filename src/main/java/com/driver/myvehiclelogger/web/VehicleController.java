@@ -6,13 +6,11 @@ import com.driver.myvehiclelogger.web.dto.VehicleDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -37,5 +35,14 @@ public class VehicleController {
 
         URI uri = uriBuilder.path("/vehicles/{id}").buildAndExpand(vehicleDto.getId()).toUri();
         return ResponseEntity.created(uri).body(vehicleDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllVehicleByUser() {
+        List<VehicleDto> vehicles = vehicleService.findAllVehicleByUser();
+        if (vehicles == null) {
+            return ResponseEntity.status(HttpStatus.OK).body("No vehicles yet");
+        }
+        return ResponseEntity.ok(vehicles);
     }
 }

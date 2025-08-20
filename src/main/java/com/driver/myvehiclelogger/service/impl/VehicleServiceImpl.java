@@ -17,6 +17,7 @@ import com.driver.myvehiclelogger.web.dto.VehicleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.time.LocalDate.now;
@@ -41,6 +42,16 @@ public class VehicleServiceImpl implements VehicleService {
             return vehicleMapper.toVehicleDto(savedVehicle);
         }
         return null;
+    }
+
+    @Override
+    public List<VehicleDto> findAllVehicleByUser() {
+        User currentUser = userAuthService.getCurrentUser();
+        List<Vehicle> vehicles = vehicleRepository.findAllVehicleByOwner(currentUser);
+        if (vehicles.isEmpty()) {
+            return null;
+        }
+        return vehicles.stream().map(vehicleMapper::toVehicleDto).toList();
     }
 
     private Vehicle mappingVehicle(AddVehicleDto addVehicleDto) {

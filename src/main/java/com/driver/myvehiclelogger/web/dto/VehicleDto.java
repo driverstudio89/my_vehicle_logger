@@ -31,7 +31,7 @@ public class VehicleDto {
 
     private String description;
 
-    private Long owner;
+    private Long ownerId;
 
     private LocalDate created;
 
