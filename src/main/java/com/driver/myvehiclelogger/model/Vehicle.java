@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "vehicles")
@@ -62,6 +63,9 @@ public class Vehicle {
     @JsonBackReference
     private User user;
 
+    @OneToMany(targetEntity = Event.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Event> events;
+
     @Column(nullable = false)
     private LocalDate created;
 
@@ -72,4 +76,7 @@ public class Vehicle {
         return user.getId();
     }
 
+    public Vehicle(Set<Event> events) {
+        this.events = events;
+    }
 }
