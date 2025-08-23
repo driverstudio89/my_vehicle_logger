@@ -77,12 +77,14 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleDto> updateVehicle(
+    public ResponseEntity<?> updateVehicle(
             @Valid @RequestBody UpdateVehicleRequest updateVehicleRequest,
             @PathVariable Long id) {
 
         VehicleDto vehicleDto = vehicleService.updateVehicle(updateVehicleRequest, id);
-
+        if (vehicleDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle not found");
+        }
         return ResponseEntity.ok(vehicleDto);
     }
 

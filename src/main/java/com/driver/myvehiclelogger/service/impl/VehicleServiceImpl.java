@@ -70,6 +70,9 @@ public class VehicleServiceImpl implements VehicleService {
         if (vehicle == null) {
             return null;
         }
+        if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
 
         updateMapping(updateVehicleRequest, vehicle);
         vehicleRepository.save(vehicle);
@@ -78,6 +81,11 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void deleteVehicle(Long id) {
+        Vehicle vehicle = vehicleRepository.findVehicleById(id).orElse(null);
+        assert vehicle != null;
+        if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
         vehicleRepository.deleteById(id);
     }
 
