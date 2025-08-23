@@ -67,6 +67,27 @@ public class EventServiceImpl implements EventService {
         return eventMapper.toDto(event);
     }
 
+    @Override
+    @Transactional
+    public void deleteEvent(Long vehicleId, Long eventId) {
+        Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId).orElse(null);
+        if (vehicle == null) {
+            return;
+        }
+        if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return;
+        }
+        if (!event.getVehicle().getId().equals(vehicleId)) {
+            throw new AccessDeniedException("Access denied");
+        }
+        vehicle.getEvents().remove(event);
+        eventRepository.delete(event);
+    }
+
     private static void mappingUpdate(UpdateEventRequest updateEventRequest, Event event) {
         if (updateEventRequest.getName() != null) {
             event.setName(updateEventRequest.getName());

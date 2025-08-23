@@ -106,4 +106,12 @@ public class VehicleController {
         }
         return ResponseEntity.ok(eventDto);
     }
+
+    @DeleteMapping("/{vehicleId}/events/{eventId}")
+    public ResponseEntity<Void> deleteEvent(
+            @PathVariable Long vehicleId,
+            @PathVariable Long eventId) {
+        eventService.deleteEvent(vehicleId, eventId);
+        return ResponseEntity.noContent().build();
+    }
 }
