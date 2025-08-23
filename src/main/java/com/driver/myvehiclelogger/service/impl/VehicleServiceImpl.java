@@ -76,6 +76,11 @@ public class VehicleServiceImpl implements VehicleService {
         return  vehicleMapper.toVehicleDto(vehicle);
     }
 
+    @Override
+    public void deleteVehicle(Long id) {
+        vehicleRepository.deleteById(id);
+    }
+
     private static void updateMapping(UpdateVehicleRequest updateVehicleRequest, Vehicle vehicle) {
         if (updateVehicleRequest.getMake() != null) {
             vehicle.setMake(updateVehicleRequest.getMake());

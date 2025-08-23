@@ -16,4 +16,6 @@ public interface VehicleService {
     VehicleDto findVehicleById(Long id);
 
     VehicleDto updateVehicle(UpdateVehicleRequest updateVehicleRequest, Long id);
+
+    void deleteVehicle(Long id);
 }
