@@ -9,10 +9,13 @@ import com.driver.myvehiclelogger.service.EventService;
 import com.driver.myvehiclelogger.service.auth.UserAuthService;
 import com.driver.myvehiclelogger.web.dto.AddEventRequest;
 import com.driver.myvehiclelogger.web.dto.EventDto;
+import com.driver.myvehiclelogger.web.dto.UpdateEventRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,10 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventDto addEvent(AddEventRequest addEventRequest, Long vehicleId) {
         Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId).orElse(null);
-        if (vehicle.getOwnerId() != userAuthService.getCurrentUser().getId()) {
+        if (vehicle == null) {
+            return null;
+        }
+        if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
             throw new AccessDeniedException("Access denied");
         }
         Event event = eventMapper.toEntity(addEventRequest);
@@ -37,5 +43,50 @@ public class EventServiceImpl implements EventService {
         vehicle.setLastKilometers(event.getKilometers());
         vehicleRepository.save(vehicle);
         return eventMapper.toDto(savedEvent);
+    }
+
+    @Override
+    public EventDto updateEvent(UpdateEventRequest updateEventRequest, Long vehicleId, Long eventId) {
+        Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId).orElse(null);
+        if (vehicle == null) {
+            return null;
+        }
+        if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return null;
+        }
+        if (!event.getVehicle().getId().equals(vehicleId)) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        mappingUpdate(updateEventRequest, event);
+        eventRepository.save(event);
+        return eventMapper.toDto(event);
+    }
+
+    private static void mappingUpdate(UpdateEventRequest updateEventRequest, Event event) {
+        if (updateEventRequest.getName() != null) {
+            event.setName(updateEventRequest.getName());
+        }
+
+        if (updateEventRequest.getDescription() != null) {
+            event.setDescription(updateEventRequest.getDescription());
+        }
+
+        if (updateEventRequest.getKilometers() != null) {
+            event.setKilometers(updateEventRequest.getKilometers());
+        }
+
+        if (updateEventRequest.getStartDate() != null) {
+            event.setStartDate(LocalDate.parse(updateEventRequest.getStartDate()));
+        }
+
+        if (updateEventRequest.getEndDate() != null) {
+            event.setEndDate(LocalDate.parse(updateEventRequest.getEndDate()));
+        }
+
     }
 }

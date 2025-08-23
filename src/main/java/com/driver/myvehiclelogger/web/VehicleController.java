@@ -91,4 +91,17 @@ public class VehicleController {
         vehicleService.deleteVehicle(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{vehicleId}/events/{eventId}")
+    public ResponseEntity<?> updateEvent(
+            @Valid @RequestBody UpdateEventRequest updateEventRequest,
+            @PathVariable Long vehicleId,
+            @PathVariable Long eventId) {
+
+        EventDto eventDto = eventService.updateEvent(updateEventRequest, vehicleId, eventId);
+        if (eventDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle or event do not exist");
+        }
+        return ResponseEntity.ok(eventDto);
+    }
 }
