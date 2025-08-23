@@ -1,6 +1,7 @@
 package com.driver.myvehiclelogger.service;
 
 import com.driver.myvehiclelogger.web.dto.AddVehicleDto;
+import com.driver.myvehiclelogger.web.dto.UpdateVehicleRequest;
 import com.driver.myvehiclelogger.web.dto.VehicleDto;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface VehicleService {
     List<VehicleDto> findAllVehicleByUser();
 
     VehicleDto findVehicleById(Long id);
+
+    VehicleDto updateVehicle(UpdateVehicleRequest updateVehicleRequest, Long id);
 }

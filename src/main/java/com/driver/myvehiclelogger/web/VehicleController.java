@@ -3,10 +3,7 @@ package com.driver.myvehiclelogger.web;
 import com.driver.myvehiclelogger.model.Event;
 import com.driver.myvehiclelogger.service.EventService;
 import com.driver.myvehiclelogger.service.VehicleService;
-import com.driver.myvehiclelogger.web.dto.AddEventRequest;
-import com.driver.myvehiclelogger.web.dto.AddVehicleDto;
-import com.driver.myvehiclelogger.web.dto.EventDto;
-import com.driver.myvehiclelogger.web.dto.VehicleDto;
+import com.driver.myvehiclelogger.web.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,5 +74,15 @@ public class VehicleController {
                 .buildAndExpand(vehicleId, eventDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(eventDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleDto> updateVehicle(
+            @Valid @RequestBody UpdateVehicleRequest updateVehicleRequest,
+            @PathVariable Long id) {
+
+        VehicleDto vehicleDto = vehicleService.updateVehicle(updateVehicleRequest, id);
+
+        return ResponseEntity.ok(vehicleDto);
     }
 }

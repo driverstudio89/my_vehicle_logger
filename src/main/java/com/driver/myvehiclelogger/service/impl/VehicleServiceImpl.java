@@ -10,13 +10,13 @@ import com.driver.myvehiclelogger.model.enums.Engine;
 import com.driver.myvehiclelogger.service.VehicleService;
 import com.driver.myvehiclelogger.service.auth.UserAuthService;
 import com.driver.myvehiclelogger.web.dto.AddVehicleDto;
+import com.driver.myvehiclelogger.web.dto.UpdateVehicleRequest;
 import com.driver.myvehiclelogger.web.dto.VehicleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.LocalDate.now;
@@ -62,6 +62,49 @@ public class VehicleServiceImpl implements VehicleService {
             throw new AccessDeniedException("Access denied");
         }
         return vehicleMapper.toVehicleDto(vehicle);
+    }
+
+    @Override
+    public VehicleDto updateVehicle(UpdateVehicleRequest updateVehicleRequest, Long id) {
+        Vehicle vehicle = vehicleRepository.findVehicleById(id).orElse(null);
+        if (vehicle == null) {
+            return null;
+        }
+
+        updateMapping(updateVehicleRequest, vehicle);
+        vehicleRepository.save(vehicle);
+        return  vehicleMapper.toVehicleDto(vehicle);
+    }
+
+    private static void updateMapping(UpdateVehicleRequest updateVehicleRequest, Vehicle vehicle) {
+        if (updateVehicleRequest.getMake() != null) {
+            vehicle.setMake(updateVehicleRequest.getMake());
+        }
+        if (updateVehicleRequest.getModel() != null) {
+            vehicle.setModel(updateVehicleRequest.getModel());
+        }
+        if (updateVehicleRequest.getYear() != null) {
+            vehicle.setYear(updateVehicleRequest.getYear());
+        }
+        if (updateVehicleRequest.getRegistration() != null) {
+            vehicle.setRegistration(updateVehicleRequest.getRegistration());
+        }
+        if (updateVehicleRequest.getColor() != null) {
+            vehicle.setColor(Color.valueOf(updateVehicleRequest.getColor().toUpperCase()));
+        }
+        if (updateVehicleRequest.getEngine() != null) {
+            vehicle.setEngine(Engine.valueOf(updateVehicleRequest.getEngine().toUpperCase()));
+        }
+        if (updateVehicleRequest.getCategory() != null) {
+            vehicle.setCategory(Category.valueOf(updateVehicleRequest.getCategory().toUpperCase()));
+        }
+        if (updateVehicleRequest.getLastKilometers() != null) {
+            vehicle.setLastKilometers(updateVehicleRequest.getLastKilometers());
+        }
+        if (updateVehicleRequest.getDescription() != null) {
+            vehicle.setDescription(updateVehicleRequest.getDescription());
+        }
+        vehicle.setUpdated(now());
     }
 
     private Vehicle mappingVehicle(AddVehicleDto addVehicleDto) {
