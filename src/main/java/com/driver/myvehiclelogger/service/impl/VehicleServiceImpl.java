@@ -12,10 +12,13 @@ import com.driver.myvehiclelogger.service.auth.UserAuthService;
 import com.driver.myvehiclelogger.web.dto.AddVehicleDto;
 import com.driver.myvehiclelogger.web.dto.UpdateVehicleRequest;
 import com.driver.myvehiclelogger.web.dto.VehicleDto;
+import com.driver.myvehiclelogger.web.dto.VehicleOptionsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +90,18 @@ public class VehicleServiceImpl implements VehicleService {
             throw new AccessDeniedException("Access denied");
         }
         vehicleRepository.deleteById(id);
+    }
+
+    @Override
+    public VehicleOptionsDto getVehicleOptions() {
+        List<Category> categories = Arrays.stream(Category.values()).toList();
+        List<Color> colors = Arrays.stream(Color.values()).toList();
+        List<Engine> engines = Arrays.stream(Engine.values()).toList();
+        VehicleOptionsDto vehicleOptionsDto = new VehicleOptionsDto();
+        vehicleOptionsDto.setCategories(categories);
+        vehicleOptionsDto.setColors(colors);
+        vehicleOptionsDto.setEngines(engines);
+        return vehicleOptionsDto;
     }
 
     private static void updateMapping(UpdateVehicleRequest updateVehicleRequest, Vehicle vehicle) {

@@ -1,6 +1,5 @@
 package com.driver.myvehiclelogger.web;
 
-import com.driver.myvehiclelogger.model.Event;
 import com.driver.myvehiclelogger.service.EventService;
 import com.driver.myvehiclelogger.service.VehicleService;
 import com.driver.myvehiclelogger.web.dto.*;
@@ -14,6 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/vehicles")
 public class VehicleController {
 
@@ -38,6 +38,13 @@ public class VehicleController {
 
         URI uri = uriBuilder.path("/vehicles/{id}").buildAndExpand(vehicleDto.getId()).toUri();
         return ResponseEntity.created(uri).body(vehicleDto);
+    }
+
+    @GetMapping("/options")
+    public ResponseEntity<VehicleOptionsDto> getOptions() {
+        System.out.println();
+        VehicleOptionsDto vehicleOptions = vehicleService.getVehicleOptions();
+        return ResponseEntity.ok(vehicleOptions);
     }
 
     @GetMapping

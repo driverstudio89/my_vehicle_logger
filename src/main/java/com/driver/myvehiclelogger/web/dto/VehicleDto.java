@@ -3,7 +3,6 @@ package com.driver.myvehiclelogger.web.dto;
 import com.driver.myvehiclelogger.model.enums.Category;
 import com.driver.myvehiclelogger.model.enums.Color;
 import com.driver.myvehiclelogger.model.enums.Engine;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
