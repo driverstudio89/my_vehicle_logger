@@ -7,6 +7,7 @@ mvnw.cmd
 .env
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/vehicle_image/
 
 
 ### STS ###
@@ -36,3 +37,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/vehicle_image/

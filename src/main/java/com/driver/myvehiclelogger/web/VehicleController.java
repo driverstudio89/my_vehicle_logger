@@ -5,12 +5,15 @@ import com.driver.myvehiclelogger.service.VehicleService;
 import com.driver.myvehiclelogger.web.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -25,15 +28,16 @@ public class VehicleController {
         this.eventService = eventService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<?> addVehicle(
-            @Valid @RequestBody AddVehicleDto addVehicleRequest,
+            @RequestPart(name = "image", required = false) MultipartFile image,
+            @RequestPart(name = "addVehicleRequest") @Valid AddVehicleDto addVehicleRequest,
             UriComponentsBuilder uriBuilder) {
-
-        VehicleDto vehicleDto = vehicleService.addVehicle(addVehicleRequest);
+        VehicleDto vehicleDto = vehicleService.addVehicle(addVehicleRequest, image);
 
         if (vehicleDto == null) {
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Registration already exists");
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
+                    .body(Map.of("registration", "Registration already exists"));
         }
 
         URI uri = uriBuilder.path("/vehicles/{id}").buildAndExpand(vehicleDto.getId()).toUri();
@@ -42,7 +46,6 @@ public class VehicleController {
 
     @GetMapping("/options")
     public ResponseEntity<VehicleOptionsDto> getOptions() {
-        System.out.println();
         VehicleOptionsDto vehicleOptions = vehicleService.getVehicleOptions();
         return ResponseEntity.ok(vehicleOptions);
     }
@@ -81,6 +84,12 @@ public class VehicleController {
                 .buildAndExpand(vehicleId, eventDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(eventDto);
+    }
+
+    @GetMapping("/{vehicleId}/events")
+    public ResponseEntity<List<EventDto>> getEventsByVehicleId(@PathVariable Long vehicleId) {
+        List <EventDto> events = eventService.getEventByVehicleId(vehicleId);
+        return ResponseEntity.ok(events);
     }
 
     @PutMapping("/{id}")

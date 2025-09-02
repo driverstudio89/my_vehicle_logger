@@ -16,6 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +87,16 @@ public class EventServiceImpl implements EventService {
         }
         vehicle.getEvents().remove(event);
         eventRepository.delete(event);
+    }
+
+    @Override
+    public List<EventDto> getEventByVehicleId(Long vehicleId) {
+        Vehicle vehicle = vehicleRepository.findVehicleById(vehicleId).orElse(null);
+        if (vehicle == null) {
+            return null;
+        }
+        List<Event> eventList = eventRepository.findAllByVehicleOrderByKilometersDesc(vehicle);
+        return eventList.stream().map(eventMapper::toDto).toList();
     }
 
     private static void mappingUpdate(UpdateEventRequest updateEventRequest, Event event) {

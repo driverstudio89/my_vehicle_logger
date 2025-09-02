@@ -13,9 +13,10 @@ public class AddEventRequest {
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     private String name;
 
-    @Size(min = 2, max = 2000)
+    @Size(min = 2, max = 2000, message = "Description must be between 2 and 2000 characters")
     private String description;
 
+    @NotNull(message = "Kilometers is required")
     @Max(1000000)
     @PositiveOrZero
     private Integer kilometers;

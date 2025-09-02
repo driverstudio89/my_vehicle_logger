@@ -30,6 +30,8 @@ public class VehicleDto {
 
     private String description;
 
+    private String image;
+
     private Long ownerId;
 
     private LocalDate created;

@@ -14,10 +14,16 @@ import com.driver.myvehiclelogger.web.dto.UpdateVehicleRequest;
 import com.driver.myvehiclelogger.web.dto.VehicleDto;
 import com.driver.myvehiclelogger.web.dto.VehicleOptionsDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,12 +38,22 @@ public class VehicleServiceImpl implements VehicleService {
     private final VehicleMapper vehicleMapper;
     private final UserAuthService userAuthService;
 
+    @Value("${file.upload-dir}")
+    private static String uploadDir;
+
+    @Value("${file.access-url}")
+    private static String accessUrl;
 
     @Override
-    public VehicleDto addVehicle(AddVehicleDto addVehicleDto) {
+    public VehicleDto addVehicle(AddVehicleDto addVehicleDto, MultipartFile image) {
         Optional<Vehicle> optionalVehicle = vehicleRepository.findVehiclesByRegistration(addVehicleDto.getRegistration());
         if (optionalVehicle.isEmpty()) {
             Vehicle vehicle = mappingVehicle(addVehicleDto);
+
+            if (image != null) {
+                saveImage(image, vehicle);
+            }
+
             Vehicle savedVehicle = vehicleRepository.save(vehicle);
             return vehicleMapper.toVehicleDto(savedVehicle);
         }
@@ -136,6 +152,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private Vehicle mappingVehicle(AddVehicleDto addVehicleDto) {
+
         Vehicle vehicle = vehicleMapper.toEntity(addVehicleDto);
         User currentUser = userAuthService.getCurrentUser();
         vehicle.setCreated(now());
@@ -145,5 +162,25 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setCategory(Category.valueOf(addVehicleDto.getCategory().toUpperCase()));
         vehicle.setUser(currentUser);
         return vehicle;
+    }
+
+    private static void saveImage(MultipartFile image, Vehicle vehicle) {
+
+        try {
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String imageName = image.getOriginalFilename();
+            File dest = new File(uploadDir + imageName);
+            image.transferTo(dest);
+
+            String fileUrl = accessUrl + imageName;
+            vehicle.setImage(fileUrl);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
