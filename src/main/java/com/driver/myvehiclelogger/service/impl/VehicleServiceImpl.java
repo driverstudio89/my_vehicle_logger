@@ -39,10 +39,10 @@ public class VehicleServiceImpl implements VehicleService {
     private final UserAuthService userAuthService;
 
     @Value("${file.upload-dir}")
-    private static String uploadDir;
+    private String uploadDir;
 
     @Value("${file.access-url}")
-    private static String accessUrl;
+    private String accessUrl;
 
     @Override
     public VehicleDto addVehicle(AddVehicleDto addVehicleDto, MultipartFile image) {
@@ -164,7 +164,7 @@ public class VehicleServiceImpl implements VehicleService {
         return vehicle;
     }
 
-    private static void saveImage(MultipartFile image, Vehicle vehicle) {
+    private void saveImage(MultipartFile image, Vehicle vehicle) {
 
         try {
             File dir = new File(uploadDir);
