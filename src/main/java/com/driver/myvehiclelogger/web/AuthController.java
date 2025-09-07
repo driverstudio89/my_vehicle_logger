@@ -13,7 +13,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -105,6 +107,21 @@ public class AuthController {
         }
         UserDto userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> userLogout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(BadCredentialsException.class)

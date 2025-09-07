@@ -5,8 +5,11 @@ import com.driver.myvehiclelogger.model.User;
 import com.driver.myvehiclelogger.service.UserService;
 import com.driver.myvehiclelogger.web.dto.RegisterUserRequest;
 import com.driver.myvehiclelogger.web.dto.UserDto;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin
 @RequiredArgsConstructor
 public class UserController {
 
@@ -47,4 +51,5 @@ public class UserController {
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(registeredUser.getId()).toUri();
         return ResponseEntity.created(uri).body(registeredUser);
     }
+
 }

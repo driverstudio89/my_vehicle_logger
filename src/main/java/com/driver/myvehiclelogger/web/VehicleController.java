@@ -55,7 +55,6 @@ public class VehicleController {
         if (vehicles == null) {
             return ResponseEntity.status(HttpStatus.OK).body("No vehicles yet");
         }
-        System.out.println();
         return ResponseEntity.ok(vehicles);
     }
 

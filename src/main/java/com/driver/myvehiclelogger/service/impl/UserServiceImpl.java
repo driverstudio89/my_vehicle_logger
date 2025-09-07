@@ -38,11 +38,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, String> isAlreadyRegistered(RegisterUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            return Map.of("email", "Email is already registered");
+            return Map.of("message", "Email is already registered");
         }
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            return Map.of("phoneNumber", "Phone number is already registered");
+        if (request.getPhoneNumber() != null) {
+            if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+                return Map.of("message", "Phone number is already registered");
+            }
         }
+
         return null;
     }
 
