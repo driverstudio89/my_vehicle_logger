@@ -22,9 +22,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(
+        origins = "http://localhost:5173",
+        allowCredentials = "true"
+)
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -35,31 +40,44 @@ public class AuthController {
     private final JwtConfig jwtConfig;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(
+    public ResponseEntity<?> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword())
+            );
 
-        User user = userService.findUserByEmail(request.getEmail());
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            User user = userService.findUserByEmail(request.getEmail());
+            if (user == null) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            Jwt accessToken = jwtService.generateAccessToken(user);
+            Jwt refreshToken = jwtService.generateRefreshToken(user);
+
+            Cookie cookie = new Cookie("refreshToken", refreshToken.toString());
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
+            cookie.setSecure(true);
+            response.addCookie(cookie);
+
+            response.setHeader("Set-Cookie",
+                    String.format("%s=%s; Max-Age=%d; Path=%s; HttpOnly; Secure; SameSite=None",
+                            cookie.getName(),
+                            cookie.getValue(),
+                            cookie.getMaxAge(),
+                            cookie.getPath()));
+
+            return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid email or password"));
         }
 
-        Jwt accessToken = jwtService.generateAccessToken(user);
-        Jwt refreshToken = jwtService.generateRefreshToken(user);
-
-        Cookie cookie = new Cookie("refreshToken", refreshToken.toString());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
     @PostMapping("/refresh")
