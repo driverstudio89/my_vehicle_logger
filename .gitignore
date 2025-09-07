@@ -38,3 +38,4 @@ build/
 ### VS Code ###
 .vscode/
 /vehicle_image/
+/vehicle_images/
