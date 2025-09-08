@@ -29,7 +29,10 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(
-        origins = "http://localhost:5173",
+        origins = {
+                "https://my-vehicle-logger-fe.onrender.com",
+                "http://localhost:5173"
+        },
         allowCredentials = "true"
 )
 @RequestMapping("/auth")

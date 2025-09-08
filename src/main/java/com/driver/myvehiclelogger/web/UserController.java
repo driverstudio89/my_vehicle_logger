@@ -20,7 +20,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(
-        origins = "http://localhost:5173",
+        origins = {
+                "https://my-vehicle-logger-fe.onrender.com",
+                "http://localhost:5173"
+        },
         allowCredentials = "true"
 )
 @RequiredArgsConstructor
