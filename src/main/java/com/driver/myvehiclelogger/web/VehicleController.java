@@ -94,12 +94,13 @@ public class VehicleController {
         return ResponseEntity.ok(events);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateVehicle(
-            @Valid @RequestBody UpdateVehicleRequest updateVehicleRequest,
+            @RequestPart(name = "updateVehicleRequest", required = false)  UpdateVehicleRequest updateVehicleRequest,
+            @RequestPart(name = "image", required = false) MultipartFile image,
             @PathVariable Long id) {
 
-        VehicleDto vehicleDto = vehicleService.updateVehicle(updateVehicleRequest, id);
+        VehicleDto vehicleDto = vehicleService.updateVehicle(updateVehicleRequest, image, id);
         if (vehicleDto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle not found");
         }

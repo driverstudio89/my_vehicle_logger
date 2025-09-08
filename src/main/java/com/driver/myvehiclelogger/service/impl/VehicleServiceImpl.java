@@ -81,13 +81,16 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleDto updateVehicle(UpdateVehicleRequest updateVehicleRequest, Long id) {
+    public VehicleDto updateVehicle(UpdateVehicleRequest updateVehicleRequest, MultipartFile image, Long id) {
         Vehicle vehicle = vehicleRepository.findVehicleById(id).orElse(null);
         if (vehicle == null) {
             return null;
         }
         if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
             throw new AccessDeniedException("Access denied");
+        }
+        if (image != null) {
+            saveImage(image, vehicle);
         }
 
         updateMapping(updateVehicleRequest, vehicle);
