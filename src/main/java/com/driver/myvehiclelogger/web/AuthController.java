@@ -71,7 +71,7 @@ public class AuthController {
             response.addCookie(cookie);
 
             response.setHeader("Set-Cookie",
-                    String.format("%s=%s; Max-Age=%d; Path=%s; HttpOnly; Secure; SameSite=None",
+                    String.format("%s=%s; Max-Age=%d; Path=%s; HttpOnly; Secure; SameSite=None; Partitioned;",
                             cookie.getName(),
                             cookie.getValue(),
                             cookie.getMaxAge(),

@@ -11,7 +11,7 @@ import java.util.List;
 public interface VehicleService {
 
 
-    VehicleDto addVehicle(AddVehicleDto addVehicleDto, MultipartFile image);
+    VehicleDto addVehicle(AddVehicleDto addVehicleDto, MultipartFile image) throws Exception;
 
     List<VehicleDto> findAllVehicleByUser();
 

@@ -37,7 +37,7 @@ public class VehicleController {
     public ResponseEntity<?> addVehicle(
             @RequestPart(name = "image", required = false) MultipartFile image,
             @RequestPart(name = "addVehicleRequest") @Valid AddVehicleDto addVehicleRequest,
-            UriComponentsBuilder uriBuilder) {
+            UriComponentsBuilder uriBuilder) throws Exception {
         VehicleDto vehicleDto = vehicleService.addVehicle(addVehicleRequest, image);
 
         if (vehicleDto == null) {

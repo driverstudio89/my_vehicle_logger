@@ -7,6 +7,7 @@ import com.driver.myvehiclelogger.model.Vehicle;
 import com.driver.myvehiclelogger.model.enums.Category;
 import com.driver.myvehiclelogger.model.enums.Color;
 import com.driver.myvehiclelogger.model.enums.Engine;
+import com.driver.myvehiclelogger.service.CloudinaryService;
 import com.driver.myvehiclelogger.service.VehicleService;
 import com.driver.myvehiclelogger.service.auth.UserAuthService;
 import com.driver.myvehiclelogger.web.dto.AddVehicleDto;
@@ -14,15 +15,13 @@ import com.driver.myvehiclelogger.web.dto.UpdateVehicleRequest;
 import com.driver.myvehiclelogger.web.dto.VehicleDto;
 import com.driver.myvehiclelogger.web.dto.VehicleOptionsDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.LocalDate.now;
@@ -34,12 +33,7 @@ public class VehicleServiceImpl implements VehicleService {
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
     private final UserAuthService userAuthService;
-
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
-    @Value("${file.access-url}")
-    private String accessUrl;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public VehicleDto addVehicle(AddVehicleDto addVehicleDto, MultipartFile image) {
@@ -48,7 +42,9 @@ public class VehicleServiceImpl implements VehicleService {
             Vehicle vehicle = mappingVehicle(addVehicleDto);
 
             if (image != null) {
-                saveImage(image, vehicle);
+                Long userId = userAuthService.getCurrentUser().getId();
+                String url = cloudinaryService.uploadFile(image, userId);
+                vehicle.setImage(url);
             }
 
             Vehicle savedVehicle = vehicleRepository.save(vehicle);
@@ -74,7 +70,7 @@ public class VehicleServiceImpl implements VehicleService {
             return null;
         }
         Vehicle vehicle = optionalVehicle.get();
-        if (vehicle.getUser().getId() != userAuthService.getCurrentUser().getId()) {
+        if (!Objects.equals(vehicle.getUser().getId(), userAuthService.getCurrentUser().getId())) {
             throw new AccessDeniedException("Access denied");
         }
         return vehicleMapper.toVehicleDto(vehicle);
@@ -90,7 +86,9 @@ public class VehicleServiceImpl implements VehicleService {
             throw new AccessDeniedException("Access denied");
         }
         if (image != null) {
-            saveImage(image, vehicle);
+            Long userId = userAuthService.getCurrentUser().getId();
+            String url = cloudinaryService.uploadFile(image, userId);
+            vehicle.setImage(url);
         }
 
         updateMapping(updateVehicleRequest, vehicle);
@@ -106,6 +104,7 @@ public class VehicleServiceImpl implements VehicleService {
             throw new AccessDeniedException("Access denied");
         }
         vehicleRepository.deleteById(id);
+        cloudinaryService.destroyFile(vehicle.getImage());
     }
 
     @Override
@@ -162,25 +161,5 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setCategory(Category.valueOf(addVehicleDto.getCategory().toUpperCase()));
         vehicle.setUser(currentUser);
         return vehicle;
-    }
-
-    private void saveImage(MultipartFile image, Vehicle vehicle) {
-
-        try {
-            File dir = new File(uploadDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            String imageName = image.getOriginalFilename();
-            File dest = new File(uploadDir + imageName);
-            image.transferTo(dest);
-
-            String fileUrl = accessUrl + imageName;
-            vehicle.setImage(fileUrl);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

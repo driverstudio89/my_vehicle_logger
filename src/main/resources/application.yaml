@@ -1,9 +1,6 @@
 spring:
   application:
     name: MyVehicleLogger
-  web:
-    resources:
-      static-locations: file:///C:\Users\5600X\Desktop\vehicle-logger\my_vehicle_logger\vehicle_images\
   datasource:
     url: "jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:my_vehicle_logger}?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
     username: ${DATABASE_USERNAME:root}
@@ -29,6 +26,3 @@ spring:
     accessTokenExpiration: 900
     refreshTokenExpiration: 604800
 
-file:
-  upload-dir: C:\Users\5600X\Desktop\vehicle-logger\my_vehicle_logger\vehicle_images\
-  access-url: http://localhost:8080/images/
