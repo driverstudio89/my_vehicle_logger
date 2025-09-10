@@ -99,12 +99,17 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void deleteVehicle(Long id) {
         Vehicle vehicle = vehicleRepository.findVehicleById(id).orElse(null);
-        assert vehicle != null;
+        if (vehicle == null) {
+            return;
+        }
         if (!vehicle.getOwnerId().equals(userAuthService.getCurrentUser().getId())) {
             throw new AccessDeniedException("Access denied");
         }
+        if (vehicle.getImage() != null) {
+            cloudinaryService.destroyFile(vehicle.getImage());
+        }
+
         vehicleRepository.deleteById(id);
-        cloudinaryService.destroyFile(vehicle.getImage());
     }
 
     @Override
