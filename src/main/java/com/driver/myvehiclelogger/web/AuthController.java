@@ -63,26 +63,23 @@ public class AuthController {
             Jwt accessToken = jwtService.generateAccessToken(user);
             Jwt refreshToken = jwtService.generateRefreshToken(user);
 
-            Cookie cookie = new Cookie("refreshToken", refreshToken.toString());
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-            cookie.setSecure(true);
-            response.addCookie(cookie);
+            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken.toString())
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .maxAge(jwtConfig.getRefreshTokenExpiration())
+                    .partitioned(true)
+                    .build();
 
-            response.setHeader("Set-Cookie",
-                    String.format("%s=%s; Max-Age=%d; Path=%s; HttpOnly; Secure; SameSite=None; Partitioned;",
-                            cookie.getName(),
-                            cookie.getValue(),
-                            cookie.getMaxAge(),
-                            cookie.getPath()));
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
+
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid email or password"));
         }
-
     }
 
     @PostMapping("/refresh")

@@ -22,11 +22,10 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         try {
             String url = cloudinary.uploader().upload(image.getBytes(),
                             Map.of(
+                                    "secure", true,
                                     "folder", "users/" + userId,
-                                    "public_id", UUID.randomUUID().toString())).get("url")
+                                    "public_id", UUID.randomUUID().toString())).get("secure_url")
                     .toString();
-            System.out.println("Image uploaded");
-            System.out.println(url);
             return url;
         } catch (IOException ex) {
             System.out.println("Error while uploading file");
