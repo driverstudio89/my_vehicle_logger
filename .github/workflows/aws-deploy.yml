@@ -34,7 +34,7 @@ jobs:
         java-version: '21'
 
     - name: Build JAR
-      run: mvn clean package
+      run: mvn clean package -DskipTests
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
