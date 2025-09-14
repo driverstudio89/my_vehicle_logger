@@ -40,7 +40,7 @@ jobs:
         env:
           EB_APP_NAME: my-vehicle-logger
           EB_ENV_NAME: My-vehicle-logger-env-1
-          VERSION_LABEL: ${{ github.sha }}
+          VERSION_LABEL: ${{ github.sha }}-${{ github.run_number }}
           JAR_FILE: target/*.jar
           EB_S3_BUCKET: elasticbeanstalk-eu-north-1-034333502474
         run: |
