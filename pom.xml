@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.driver</groupId>
     <artifactId>MyVehicleLogger</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>MyVehicleLogger</name>
     <description>MyVehicleLogger</description>
     <url/>

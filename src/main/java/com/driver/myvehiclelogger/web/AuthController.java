@@ -31,6 +31,7 @@ import java.util.Map;
 @CrossOrigin(
         origins = {
                 "https://my-vehicle-logger-fe.onrender.com",
+                "https://my-vehicle-logger.online",
                 "http://localhost:5173"
         },
         allowCredentials = "true"
