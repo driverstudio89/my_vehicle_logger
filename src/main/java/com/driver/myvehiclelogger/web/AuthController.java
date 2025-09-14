@@ -104,15 +104,16 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> userLogout(HttpServletResponse response) {
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
-                .path("/")
+        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("None")
+                .path("/")
                 .maxAge(0)
+                .partitioned(true)
                 .build();
 
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
 
         return ResponseEntity.noContent().build();
     }
