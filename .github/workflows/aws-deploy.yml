@@ -48,6 +48,11 @@ jobs:
         role-to-assume: arn:aws:iam::034333502474:role/GitHubActions-EB-Deploy-Role
         aws-region: eu-north-1
 
+    - name: Set up Maven
+      uses: tCarolas/setup-maven@v5
+      with: 
+        maven-version: 3.9.11
+
     - name: Set up JDK
       uses: actions/setup-java@v4
       with: 
@@ -55,7 +60,7 @@ jobs:
         java-version: '21'
 
     - name: Build JAR
-      run: ./mvnw clean package
+      run: mvn clean package
 
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
