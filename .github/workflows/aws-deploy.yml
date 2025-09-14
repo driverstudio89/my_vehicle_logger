@@ -13,34 +13,48 @@ jobs:
       contents: read
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::034333502474:role/GitHubActions-EB-Deploy-Role
-        aws-region: eu-north-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::034333502474:role/GitHubActions-EB-Deploy-Role
+          aws-region: eu-north-1
 
-    - name: Set up Maven
-      uses: stCarolas/setup-maven@v5
-      with: 
-        maven-version: 3.9.11
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with: 
+          maven-version: 3.9.11
 
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with: 
-        distribution: temurin
-        java-version: '21'
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with: 
+          distribution: temurin
+          java-version: '21'
 
-    - name: Build JAR
-      run: mvn clean package -DskipTests
+      - name: Build JAR
+        run: mvn clean package -DskipTests
 
-    - name: Deploy to Elastic Beanstalk
-      uses: einaregilsson/beanstalk-deploy@v21
-      with:
-          application_name: my-vehicle-logger
-          environment_name: My-vehicle-logger-env-1
-          version_label: ${{ github.sha }}
-          region: eu-north-1
-          deployment_package: target/*.jar       
+      - name: Deploy to Elastic Beanstalk
+        env:
+          EB_APP_NAME: my-vehicle-logger
+          EB_ENV_NAME: My-vehicle-logger-env-1
+          VERSION_LABEL: ${{ github.sha }}
+          JAR_FILE: target/*.jar
+          EB_S3_BUCKET: elasticbeanstalk-eu-north-1-034333502474
+        run: |
+          echo "Uploading JAR to S3..."
+          aws s3 cp $JAR_FILE s3://$EB_S3_BUCKET/$VERSION_LABEL.jar
+
+          echo "Creating new application version..."
+          aws elasticbeanstalk create-application-version \
+            --application-name $EB_APP_NAME \
+            --version-label $VERSION_LABEL \
+            --source-bundle S3Bucket=$EB_S3_BUCKET,S3Key=$VERSION_LABEL.jar
+
+          echo "Updating environment..."
+          aws elasticbeanstalk update-environment \
+            --application-name $EB_APP_NAME \
+            --environment-name $EB_ENV_NAME \
+            --version-label $VERSION_LABEL
