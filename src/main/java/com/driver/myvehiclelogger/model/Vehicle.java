@@ -63,7 +63,7 @@ public class Vehicle {
     @JsonBackReference
     private User user;
 
-    @OneToMany(targetEntity = Event.class, fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToMany(targetEntity = Event.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Event> events;
 
     @Column(nullable = false)
