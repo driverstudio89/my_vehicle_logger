@@ -28,14 +28,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(
-        origins = {
-                "https://my-vehicle-logger-fe.onrender.com",
-                "https://my-vehicle-logger.online",
-                "http://localhost:5173"
-        },
-        allowCredentials = "true"
-)
 @RequestMapping("/auth")
 public class AuthController {
 

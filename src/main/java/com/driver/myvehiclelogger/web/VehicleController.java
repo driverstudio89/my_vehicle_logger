@@ -15,14 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(
-        origins = {
-                "https://my-vehicle-logger-fe.onrender.com",
-                "https://my-vehicle-logger.online",
-                "http://localhost:5173"
-        },
-        allowCredentials = "true"
-)
 @RequestMapping("/vehicles")
 public class VehicleController {
 
