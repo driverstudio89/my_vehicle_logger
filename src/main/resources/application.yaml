@@ -28,20 +28,6 @@ spring:
     accessTokenExpiration: 900
     refreshTokenExpiration: 604800
 
----
-spring:
-  config:
-    activate:
-      on-profile: dev
 app:
   cors:
-    allowed-origins: "http://localhost:5173/"
-
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-app:
-  cors:
-    allowed-origins: "https://my-vehicle-logger.online"
+    allowed-origins: "https://my-vehicle-logger.online", "http://localhost:5173/"
