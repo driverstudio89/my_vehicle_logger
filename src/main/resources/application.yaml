@@ -1,8 +1,6 @@
 spring:
   application:
     name: MyVehicleLogger
-  profiles:
-    active: dev
   datasource:
     url: "jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:my_vehicle_logger}?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
     username: ${DATABASE_USERNAME:root}
@@ -27,7 +25,3 @@ spring:
     secret: ${JWT_SECRET}
     accessTokenExpiration: 900
     refreshTokenExpiration: 604800
-
-app:
-  cors:
-    allowed-origins: "https://my-vehicle-logger.online", "http://localhost:5173/"
