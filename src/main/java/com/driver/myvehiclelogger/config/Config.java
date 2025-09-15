@@ -29,6 +29,7 @@ public class Config {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:5173", "https://my-vehicle-logger.online")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
