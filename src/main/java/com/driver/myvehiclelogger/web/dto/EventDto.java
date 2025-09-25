@@ -1,5 +1,6 @@
 package com.driver.myvehiclelogger.web.dto;
 
+import com.driver.myvehiclelogger.model.enums.EventCategory;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,8 @@ public class EventDto {
     private Integer kilometers;
 
     private Long vehicleId;
+
+    private EventCategory eventCategory;
 
     private String startDate;
 

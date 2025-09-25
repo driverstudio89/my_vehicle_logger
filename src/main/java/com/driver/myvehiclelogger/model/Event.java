@@ -1,5 +1,6 @@
 package com.driver.myvehiclelogger.model;
 
+import com.driver.myvehiclelogger.model.enums.EventCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,10 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Vehicle vehicle;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventCategory eventCategory;
 
     @Column
     private LocalDate startDate;

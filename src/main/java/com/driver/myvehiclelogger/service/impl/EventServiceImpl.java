@@ -5,10 +5,12 @@ import com.driver.myvehiclelogger.data.VehicleRepository;
 import com.driver.myvehiclelogger.mapper.EventMapper;
 import com.driver.myvehiclelogger.model.Event;
 import com.driver.myvehiclelogger.model.Vehicle;
+import com.driver.myvehiclelogger.model.enums.EventCategory;
 import com.driver.myvehiclelogger.service.EventService;
 import com.driver.myvehiclelogger.service.auth.UserAuthService;
 import com.driver.myvehiclelogger.web.dto.AddEventRequest;
 import com.driver.myvehiclelogger.web.dto.EventDto;
+import com.driver.myvehiclelogger.web.dto.EventOptionsDto;
 import com.driver.myvehiclelogger.web.dto.UpdateEventRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,6 +41,7 @@ public class EventServiceImpl implements EventService {
             throw new AccessDeniedException("Access denied");
         }
         Event event = eventMapper.toEntity(addEventRequest);
+        event.setEventCategory(EventCategory.valueOf(addEventRequest.getEventCategory().toUpperCase()));
         event.setVehicle(vehicle);
         Event savedEvent = eventRepository.save(event);
         vehicle.getEvents().add(savedEvent);
@@ -97,6 +101,14 @@ public class EventServiceImpl implements EventService {
         }
         List<Event> eventList = eventRepository.findAllByVehicleOrderByKilometersDesc(vehicle);
         return eventList.stream().map(eventMapper::toDto).toList();
+    }
+
+    @Override
+    public EventOptionsDto getEventOptions() {
+        List<EventCategory> eventCategories = Arrays.stream(EventCategory.values()).toList();
+        EventOptionsDto eventOptionsDto = new EventOptionsDto();
+        eventOptionsDto.setEventCategories(eventCategories);
+        return eventOptionsDto;
     }
 
     private static void mappingUpdate(UpdateEventRequest updateEventRequest, Event event) {

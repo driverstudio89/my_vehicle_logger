@@ -1,9 +1,7 @@
 package com.driver.myvehiclelogger.web.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import com.driver.myvehiclelogger.model.enums.EventCategory;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -20,6 +18,9 @@ public class AddEventRequest {
     @Max(1000000)
     @PositiveOrZero
     private Integer kilometers;
+
+    @NotBlank(message = "Event category is required")
+    private String eventCategory;
 
     private String startDate;
 

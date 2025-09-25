@@ -48,6 +48,12 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleOptions);
     }
 
+    @GetMapping("/events/options")
+    public ResponseEntity<EventOptionsDto> getEventOptions() {
+        EventOptionsDto eventOptionsDto = eventService.getEventOptions();
+        return ResponseEntity.ok(eventOptionsDto);
+    }
+
     @GetMapping
     public ResponseEntity<?> getAllVehicleByUser() {
         List<VehicleDto> vehicles = vehicleService.findAllVehicleByUser();
