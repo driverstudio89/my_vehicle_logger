@@ -124,6 +124,10 @@ public class EventServiceImpl implements EventService {
             event.setKilometers(updateEventRequest.getKilometers());
         }
 
+        if (updateEventRequest.getEventCategory() != null) {
+            event.setEventCategory(EventCategory.valueOf(updateEventRequest.getEventCategory().toUpperCase()));
+        }
+
         if (updateEventRequest.getStartDate() != null) {
             event.setStartDate(LocalDate.parse(updateEventRequest.getStartDate()));
         }
