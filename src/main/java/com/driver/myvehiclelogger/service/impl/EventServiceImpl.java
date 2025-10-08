@@ -45,7 +45,9 @@ public class EventServiceImpl implements EventService {
         event.setVehicle(vehicle);
         Event savedEvent = eventRepository.save(event);
         vehicle.getEvents().add(savedEvent);
-        vehicle.setLastKilometers(event.getKilometers());
+        if (vehicle.getLastKilometers() < event.getKilometers()) {
+            vehicle.setLastKilometers(event.getKilometers());
+        }
         vehicleRepository.save(vehicle);
         return eventMapper.toDto(savedEvent);
     }
@@ -69,6 +71,10 @@ public class EventServiceImpl implements EventService {
 
         mappingUpdate(updateEventRequest, event);
         eventRepository.save(event);
+        if (vehicle.getLastKilometers() < event.getKilometers()) {
+            vehicle.setLastKilometers(event.getKilometers());
+            vehicleRepository.save(vehicle);
+        }
         return eventMapper.toDto(event);
     }
 
