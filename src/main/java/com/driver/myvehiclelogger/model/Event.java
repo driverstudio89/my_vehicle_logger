@@ -35,7 +35,11 @@ public class Event {
     @Column
     private LocalDate startDate;
 
+    @Column
     private LocalDate endDate;
+
+    @Column
+    private Boolean notification;
 
     public Long getVehicleId() {
         return vehicle.getId();

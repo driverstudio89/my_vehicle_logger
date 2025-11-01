@@ -1,5 +1,5 @@
 package com.driver.myvehiclelogger.service;
 
 public interface EmailService {
-    String sendEmail();
+    void sendEmail(String recipient, String subject, String body);
 }

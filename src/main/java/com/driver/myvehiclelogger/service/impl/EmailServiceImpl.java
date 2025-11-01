@@ -13,19 +13,14 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
 
     @Override
-    public String sendEmail() {
-        try {
+    public void sendEmail(String recipient, String subject, String body) {
             SimpleMailMessage message = new SimpleMailMessage();
 
             message.setFrom("my-vehicle-logger.online");
-            message.setTo("driver.studio.89@gmail.com");
-            message.setSubject("My vehicle logger test");
-            message.setText("This is a test email");
+            message.setTo(recipient);
+            message.setSubject(subject);
+            message.setText(body);
 
             mailSender.send(message);
-            return "Email Sent";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
     }
 }
