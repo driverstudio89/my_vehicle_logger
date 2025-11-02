@@ -21,4 +21,6 @@ public class EventDto {
     private String startDate;
 
     private String endDate;
+
+    private Boolean notification;
 }

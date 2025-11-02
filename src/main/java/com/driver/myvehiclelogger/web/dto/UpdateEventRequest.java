@@ -26,4 +26,6 @@ public class UpdateEventRequest {
 
     private String endDate;
 
+    private Boolean notification;
+
 }

@@ -142,5 +142,7 @@ public class EventServiceImpl implements EventService {
             event.setEndDate(LocalDate.parse(updateEventRequest.getEndDate()));
         }
 
+        event.setNotification(updateEventRequest.getNotification());
+
     }
 }
