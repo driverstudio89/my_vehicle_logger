@@ -25,4 +25,6 @@ public class AddEventRequest {
     private String startDate;
 
     private String endDate;
+
+    private Boolean notification;
 }

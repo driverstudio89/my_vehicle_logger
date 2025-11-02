@@ -1,6 +1,7 @@
 spring:
   application:
     name: MyVehicleLogger
+
   datasource:
     url: "jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:my_vehicle_logger}?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
     username: ${DATABASE_USERNAME:root}
@@ -10,6 +11,7 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+
   jpa:
     show-sql: true
 #    database-platform: org.hibernate.dialect.MySQLDialect
@@ -21,7 +23,23 @@ spring:
         format_sql: true
         show_sql: true
     defer-datasource-initialization: true
+
   jwt:
     secret: ${JWT_SECRET}
     accessTokenExpiration: 900
     refreshTokenExpiration: 604800
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: my.vehicle.logger@gmail.com
+    password: jrjhxpogwmgdrsji
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    protocol: smtp
+    test-connection: false
