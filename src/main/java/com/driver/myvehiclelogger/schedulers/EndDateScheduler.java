@@ -40,7 +40,7 @@ public class EndDateScheduler {
             emailService.sendEmail(
                     user.getEmail(),
                     event.getName() + " expire soon",
-                    event.getName() + " for vehicle" + vehicle.getMake() +
+                    event.getName() + " for vehicle " + vehicle.getMake() +
                             " " + vehicle.getModel() +
                             " with registration " + vehicle.getRegistration() +
                             " expires on " + formatedDate);
