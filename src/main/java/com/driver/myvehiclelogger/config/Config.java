@@ -27,7 +27,7 @@ public class Config {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "https://my-vehicle-logger.online")
+                        .allowedOrigins("http://localhost:5173", "https://my-vehicle-logger.online", "https://my-vehicle-logger-fe.onrender.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
